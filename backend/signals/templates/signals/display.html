@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visor de Archivos Locales</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; }
+        #file-content { background-color: #f4f4f4; border: 1px solid #ddd; padding: 1em; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+
+    <h1>Selecciona un Archivo de Texto</h1>
+    <p>Haz clic en el botón para seleccionar un archivo de texto local. Su contenido se mostrará en esta página sin subirlo al servidor.</p>
+
+    <input type="file" id="file-input" accept=".txt,.prn">
+
+    <hr>
+
+    <h2>Contenido del Archivo:</h2>
+    <pre id="file-content">El contenido del archivo seleccionado aparecerá aquí.</pre>
+
+    <script>
+        document.getElementById('file-input').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const fileContentElement = document.getElementById('file-content');
+
+            if (!file) {
+                fileContentElement.textContent = 'No se ha seleccionado ningún archivo.';
+                return;
+            }
+
+            const allowedExtensions = /(\.txt|\.prn)$/i;
+            if (!allowedExtensions.exec(file.name)) {
+                fileContentElement.textContent = 'Error: Por favor, selecciona un archivo .txt o .prn.';
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                fileContentElement.textContent = e.target.result;
+            };
+
+            reader.onerror = function() {
+                fileContentElement.textContent = 'Error al leer el archivo.';
+            };
+
+            reader.readAsText(file, 'UTF-8');
+        });
+    </script>
+
+</body>
+</html>
